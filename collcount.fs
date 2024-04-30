@@ -4,19 +4,23 @@
 \ CS 331, Assignment 7 Exercise B
 \ Collatz Function, written in Forth
 
-: collcount ( n -- c )
-    \LOCALS| n c |
-    0 {c}
-    n 1 +
-    if
-       c . s" " type
-    else
-        c 1 + to c
-        n 2 MOD 0 =
-        if
-            n 2 / collcount
-        else
-            n 3 * 1 + collcount
-        endif
+\ This function taken from the file word.fs by Glenn Chappell
+: collmath { n -- c } \ Take variable n
+    n 2 mod 0 = if \ Is n even?
+        n 2 /
+    else \ n must be odd
+        n 3 * 1 +
     endif
+;
+
+: collcount ( n -- c )
+    0 swap
+    begin
+        dup 1 = if \ You have reached 1, please follow the lighted strips to the exit
+            drop exit
+        else
+            collmath \ Do some math
+            swap 1 + swap \ Increment the number of times this has occurred
+        endif
+    again
 ;
